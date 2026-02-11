@@ -1,14 +1,39 @@
-﻿using System.Data.Entity;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace ONnegha_Mefisto_Theatre_Company.Models
 {
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit https://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
+    // The User class inherits from IdentityUser, which is a class provided by the ASP.NET Identity framework.
+    // The IdentityUser class includes properties such as UserName, Email, PasswordHash, etc., which are used for user authentication and management.
     public class User : IdentityUser
     {
+        // The User class includes additional properties such as FirstName, LastName, AddressLine1, AddressLine2, and PostCode.
+        [Required]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; }
+
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; }
+
+        [Display(Name = "Address")]
+
+        public string Street { get; set; }
+
+        public string City { get; set; }
+
+        [Display(Name = "Post Code")]
+        public string PostCode { get; set; }
+
+        [Display(Name = "Joined")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
+        public DateTime RegisteredAt { get; set; }
+
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<User> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType

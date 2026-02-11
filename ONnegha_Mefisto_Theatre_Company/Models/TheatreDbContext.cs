@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
+using System.Data.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace ONnegha_Mefisto_Theatre_Company.Models
         public TheatreDbContext()
             : base("TheatreConnection", throwIfV1Schema: false)
         {
+            Database.SetInitializer(new DatabaseInitialiser());
         }
         public static TheatreDbContext Create()
         {
