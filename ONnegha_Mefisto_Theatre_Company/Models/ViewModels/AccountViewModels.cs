@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace ONnegha_Mefisto_Theatre_Company.Models
+namespace ONnegha_Mefisto_Theatre_Company.Models.ViewModels
 {
     public class ExternalLoginConfirmationViewModel
     {

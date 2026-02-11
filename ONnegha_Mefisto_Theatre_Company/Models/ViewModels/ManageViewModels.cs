@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 
-namespace ONnegha_Mefisto_Theatre_Company.Models
+namespace ONnegha_Mefisto_Theatre_Company.Models.ViewModels
 {
     public class IndexViewModel
     {
