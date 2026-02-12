@@ -8,8 +8,6 @@ namespace ONnegha_Mefisto_Theatre_Company.Models
 {
     public class Staff : User
     {
-        //[Key]
-        //public int StaffId { get; set; }
         public bool promoted { get; set; }
         public bool isPromoted { get; set; }
 

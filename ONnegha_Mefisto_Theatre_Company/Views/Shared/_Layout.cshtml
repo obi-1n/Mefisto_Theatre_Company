@@ -21,6 +21,22 @@
                     <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
                     <li>@Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                    @if (Request.IsAuthenticated)
+                    {
+                        if (User.IsInRole("Editor"))
+                        {
+                            <li>@Html.ActionLink("My Posts", "Index", "Member", new { area = "" }, new { @class = "nav-link" })</li>
+                            <li>@Html.ActionLink("Post an ad", "Create", "Member", new { area = "" }, new { @class = "nav-link" })</li>
+                        }
+                        if (User.IsInRole("Admin"))
+                        {
+                            <li>@Html.ActionLink("Admin", "Index", "Admin", new { area = "" }, new { @class = "nav-link" })</li>
+                        }
+                        if (User.IsInRole("Moderator"))
+                        {
+                            <li>@Html.ActionLink("Moderator", "Index", "Moderator", new { area = "" }, new { @class = "nav-link" })</li>
+                        }
+                    }
                 </ul>
                  @Html.Partial("_LoginPartial")
             </div>

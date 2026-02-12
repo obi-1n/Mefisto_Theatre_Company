@@ -5,21 +5,22 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
-namespace ONnegha_Mefisto_Theatre_Company.Models.ViewModels
+namespace ONnegha_Mefisto_Theatre_Company.Models
 {
     public class Comment
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CommentId { get; set; }
         public string Content { get; set; }
         public bool isApproved { get; set; }
-        public DateTime datePosted { get; set; }
-        public DateTime dateEdited { get; set; }
+        public DateTime dateCommented { get; set; }
+        public DateTime? dateEdited { get; set; }
 
         //navigation properties
         //each comment is associated with a post
         [ForeignKey("Post")]
-        public string PostId { get; set; }
+        public int PostId { get; set; }
         public Post Post { get; set; }
 
         //each comment is associated with a member

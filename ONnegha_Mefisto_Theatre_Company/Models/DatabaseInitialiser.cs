@@ -58,15 +58,7 @@ namespace ONnegha_Mefisto_Theatre_Company.Models
                 {
                     roleManager.Create(new IdentityRole("Member"));
                 }
-
-                ////if suspended role doesnt exist, create it
-                ////suspended users can no longer leave comments, they can still view content but they cannot interact with content in any way
-                //if (!roleManager.RoleExists("Suspended"))
-                //{
-                //    roleManager.Create(new IdentityRole("Suspended"));
-                //}
-
-
+                context.SaveChanges();
 
 
                 //******************************************************************************************************************************
@@ -110,46 +102,44 @@ namespace ONnegha_Mefisto_Theatre_Company.Models
 
                 //create some editor users
                 //check if the editor user already exists, if not create it and assign it to the editor role
+                var jeff = new Staff
+                {
+                    UserName = "editor1@MTC.com",
+                    Email = "editor1@MTC.com",
+                    FirstName = "Jeff",
+                    LastName = "Jefferson",
+                    Street = "156 Gladys St",
+                    City = "Glasgow",
+                    PostCode = "G9 7GG",
+                    RegisteredAt = DateTime.Now,
+                    EmailConfirmed = true,
+                    PhoneNumber = "07355829778",
+                    isPromoted = false
+                };
                 if (userManager.FindByName("editor1@MTC.com") == null)
                 {
-                    var jeff = new Staff
-                    {
-                        UserName = "editor1@MTC.com",
-                        Email = "editor1@MTC.com",
-                        FirstName = "Jeff",
-                        LastName = "Jefferson",
-                        Street = "156 Gladys St",
-                        City = "Glasgow",
-                        PostCode = "G9 7GG",
-                        RegisteredAt = new DateTime(2022, 2, 11),
-                        EmailConfirmed = true,
-                        PhoneNumber = "07355829778",
-                        isPromoted = false
-                    };
-
                     //add jeff and the password to the Users table
                     userManager.Create(jeff, "editor123");
                     //assign the editor role to jeff
                     userManager.AddToRole(jeff.Id, "Editor");
                 }
 
+                var jane = new Staff
+                {
+                    UserName = "editor2@MTC.com",
+                    Email = "editor2@MTC.com",
+                    FirstName = "Jane",
+                    LastName = "Jenkins",
+                    Street = "6 Elmo St",
+                    City = "Glasgow",
+                    PostCode = "G1 7UM",
+                    RegisteredAt = DateTime.Now,
+                    EmailConfirmed = true,
+                    PhoneNumber = "07355856098",
+                    isPromoted = false
+                };
                 if (userManager.FindByName("editor2@MTC.com") == null)
                 {
-                    var jane = new Staff
-                    {
-                        UserName = "editor2@MTC.com",
-                        Email = "editor2@MTC.com",
-                        FirstName = "Jane",
-                        LastName = "Jenkins",
-                        Street = "6 Elmo St",
-                        City = "Glasgow",
-                        PostCode = "G1 7UM",
-                        RegisteredAt = new DateTime(2023, 5, 1),
-                        EmailConfirmed = true,
-                        PhoneNumber = "07355856098",
-                        isPromoted = false
-                    };
-
                     //add jane and the password to the Users table
                     userManager.Create(jane, "editor456");
                     //assign the editor role to jane
@@ -158,23 +148,22 @@ namespace ONnegha_Mefisto_Theatre_Company.Models
 
                 //create a moderator user
                 //check if the moderator user already exists, if not create it and assign it to the moderator role
+                var michael = new Staff
+                {
+                    UserName = "moderator@MTC.com",
+                    Email = "moderator@MTC.com",
+                    FirstName = "Michael",
+                    LastName = "Phelps",
+                    Street = "34 Olympic St",
+                    City = "Glasgow",
+                    PostCode = "G2 7GG",
+                    RegisteredAt = DateTime.Now,
+                    EmailConfirmed = true,
+                    PhoneNumber = "07355812345",
+                    isPromoted = false
+                };
                 if (userManager.FindByName("moderator@MTC.com") == null)
                 {
-                    var michael = new Staff
-                    {
-                        UserName = "moderator@MTC.com",
-                        Email = "moderator@MTC.com",
-                        FirstName = "Michael",
-                        LastName = "Phelps",
-                        Street = "34 Olympic St",
-                        City = "Glasgow",
-                        PostCode = "G2 7GG",
-                        RegisteredAt = new DateTime(2021, 8, 15),
-                        EmailConfirmed = true,
-                        PhoneNumber = "07355812345",
-                        isPromoted = false
-                    };
-
                     //add michael and the password to the Users table
                     userManager.Create(michael, "moderator123");
                     //assign the moderator role to michael
@@ -193,8 +182,8 @@ namespace ONnegha_Mefisto_Theatre_Company.Models
                     City = "Glasgow",
                     PostCode = "G56 7DF",
                     IsSuspended = false,
-                    RegisteredAt = new DateTime(2025, 1, 1),
-                    dateRegisteredAsMember = new DateTime(2025, 1, 9),
+                    RegisteredAt = DateTime.Now,
+                    dateRegisteredAsMember = DateTime.Now,
                     EmailConfirmed = true,
                     PhoneNumber = "07563902144"
                 };
@@ -202,6 +191,26 @@ namespace ONnegha_Mefisto_Theatre_Company.Models
                 {
                     userManager.Create(bill, "member1");
                     userManager.AddToRole(bill.Id, "Member");
+                }
+
+                var steve = new Member
+                {
+                    UserName = "Steve",
+                    Email = "steveb@gmail.com",
+                    EmailConfirmed = true,
+                    FirstName = "Steve",
+                    LastName = "Fist",
+                    Street = "1 Confused St",
+                    City = "Edinburgh",
+                    PostCode = "EH6 7DF",
+                    RegisteredAt = DateTime.Now.AddMonths(-10),
+                    dateRegisteredAsMember = DateTime.Now,
+                    PhoneNumber = "07988441227"
+                };
+                if (userManager.FindByName("steveb@gmail.com") == null)
+                {
+                    userManager.Create(steve, "member3");
+                    userManager.AddToRoles(steve.Id, "Member");
                 }
 
                 //a suspended member user
@@ -227,26 +236,6 @@ namespace ONnegha_Mefisto_Theatre_Company.Models
                 }
 
                 //create some regular users
-                var steve = new User
-                {
-                    UserName = "Steve",
-                    Email = "steveb@gmail.com",
-                    EmailConfirmed = true,
-                    FirstName = "Steve",
-                    LastName = "Fist",
-                    Street = "1 Confused St",
-                    City = "Edinburgh",
-                    PostCode = "EH6 7DF",
-                    RegisteredAt = DateTime.Now.AddMonths(-10),
-                    PhoneNumber = "07988441227"
-                };
-                if (userManager.FindByName("steveb@gmail.com") == null)
-                {
-
-                    userManager.Create(steve, "user1");
-                    userManager.AddToRoles(steve.Id, "User");
-                }
-
                 var gary = new User
                 {
                     UserName = "gary@gmail.com",
@@ -267,9 +256,164 @@ namespace ONnegha_Mefisto_Theatre_Company.Models
                     userManager.AddToRoles(gary.Id, "User");
                 }
 
+                //save the changes to the database
                 context.SaveChanges();
 
+                //******************************************************************************************************************************
+                //now we can create some categories
+
+                //create some categories
+                var news = new Category() { Name = "News" };
+                var events = new Category() { Name = "Events" };
+                var reviews = new Category() { Name = "Reviews" };
+                var interviews = new Category() { Name = "Interviews" };
+                var cars = new Category() { Name = "Cars" };
+                var bts = new Category() { Name = "Behind the Scenes" };
+
+                if (!context.Categories.Any())
+                {
+                    //add each category to the Categories table
+                    context.Categories.Add(news);
+                    context.Categories.Add(events);
+                    context.Categories.Add(reviews);
+                    context.Categories.Add(interviews);
+                    context.Categories.Add(cars);
+                    context.Categories.Add(bts);
+                }
+
+
+
+                //save the changes to the database
+                context.SaveChanges();
+
+                //******************************************************************************************************************************
+                //now we can create some posts
+
+                //create a few posts
+                var post1 = new Post()
+                {
+                    Title = "New Play Announced",
+                    Content = "We are excited to announce our new play, 'The Great Gatsby', which will be opening next month. Stay tuned for more details!",
+                    DatePosted = DateTime.Now.AddDays(-10),
+                    Staff = context.Users.OfType<Staff>().First(u => u.UserName == "editor1@MTC.com"),
+                    Category = news
+                };
+                var post2 = new Post()
+                {
+                    Title = "Upcoming Events",
+                    Content = "Join us for our upcoming events, including a special performance of 'Romeo and Juliet' and a behind-the-scenes tour of our theatre.",
+                    DatePosted = DateTime.Now.AddDays(-5),
+                    Staff = jane,
+                    Category = events
+                };
+                var post3 = new Post()
+                {
+                    Title = "Play Review: 'Hamlet'",
+                    Content = "Our recent production of 'Hamlet' received rave reviews from critics and audiences alike. Read our full review to find out why it was such a hit!",
+                    DatePosted = DateTime.Now.AddDays(-2),
+                    Staff = jeff,
+                    Category = reviews
+                };
+                var post4 = new Post()
+                {
+                    Title = "Interview with the Director",
+                    Content = "We sat down with our director, Jane Jenkins, to discuss her vision for our upcoming production of 'Macbeth' and what audiences can expect.",
+                    DatePosted = DateTime.Now.AddDays(-1),
+                    Staff = jane,
+                    Category = interviews
+                };
+
+                if (!context.Posts.Any())
+                {
+                    //add each post to the Posts table
+                    context.Posts.Add(post1);
+                    context.Posts.Add(post2);
+                    context.Posts.Add(post3);
+                    context.Posts.Add(post4);
+                }
+
+
+
+                //save the changes to the database
+                context.SaveChanges();
+
+                //******************************************************************************************************************************
+                //now we can create some comments
+
+                //create some comments
+                var comment1 = new Comment()
+                {
+                    Content = "I can't wait to see 'The Great Gatsby'! It sounds amazing!",
+                    dateCommented = DateTime.Now.AddDays(-9),
+                    Post = post1,
+                    Member = bill,
+                    isApproved = true
+                };
+                var comment2 = new Comment()
+                {
+                    Content = "The behind-the-scenes tour sounds like a lot of fun! I hope to attend.",
+                    dateCommented = DateTime.Now.AddDays(-4),
+                    Post = post2,
+                    Member = bill,
+                    isApproved = true
+                };
+                var comment3 = new Comment()
+                {
+                    Content = "I loved the review of 'Hamlet'! It was very insightful and made me want to see the play even more.",
+                    dateCommented = DateTime.Now.AddDays(-1),
+                    Post = post3,
+                    Member = bill,
+                    isApproved = true
+                };
+                var comment4 = new Comment()
+                {
+                    Content = "The interview with the director was fascinating! I can't wait to see her vision for 'Macbeth' come to life on stage.",
+                    dateCommented = DateTime.Now,
+                    Post = post4,
+                    Member = bill,
+                    isApproved = true
+                };
+                var comment5 = new Comment()
+                {
+                    Content = "I don't like the sound of 'The Great Gatsby'. It doesn't seem like a good play.",
+                    dateCommented = DateTime.Now.AddDays(-8),
+                    Post = post1,
+                    Member = steve,
+                    isApproved = true
+                };
+                //an unapproved comment
+                var comment6 = new Comment()
+                {
+                    Content = "The behind-the-scenes tour sounds boring. I don't think I'll attend.",
+                    dateCommented = DateTime.Now.AddDays(-3),
+                    Post = post2,
+                    Member = steve,
+                    isApproved = false
+                };
+                var comment7 = new Comment()
+                {
+                    Content = "I didn't like the review of 'Hamlet'. It was too negative and made me not want to see the play.",
+                    dateCommented = DateTime.Now,
+                    Post = post3,
+                    Member = steve,
+                    isApproved = true
+                };
+
+                if (!context.Comments.Any())
+                {
+                    //add each comment to the Comments table
+                    context.Comments.Add(comment1);
+                    context.Comments.Add(comment2);
+                    context.Comments.Add(comment3);
+                    context.Comments.Add(comment4);
+                    context.Comments.Add(comment5);
+                    context.Comments.Add(comment6);
+                    context.Comments.Add(comment7);
+                }
+                //save the changes to the database
+                context.SaveChanges();
             }
+
 
         }
 

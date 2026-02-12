@@ -1,0 +1,11 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h1>Admin Page</h1>
+
+@Html.ActionLink("View All Users", "ViewUsers", "Admin", new { @class = "btn btn-success btn-lg" })
+@Html.ActionLink("View All Posts", "ViewAllPosts", "Admin", new { @class = "btn btn-success btn-lg" })
+@Html.ActionLink("View All Categories", "ViewAllCategories", "Admin", new { @class = "btn btn-success btn-lg" })
+@Html.ActionLink("View All Comments", "ViewAllComments", "Admin", new { @class = "btn btn-success btn-lg" })

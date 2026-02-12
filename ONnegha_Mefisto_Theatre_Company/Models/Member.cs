@@ -9,14 +9,12 @@ namespace ONnegha_Mefisto_Theatre_Company.Models
 {
     public class Member : User
     {
-        //[Key]
-        //public int MemberId { get; set; }
 
         [Display(Name = "Suspended")]
         public bool IsSuspended { get; set; }
 
         [Display(Name = "Date Became a member")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
+        //[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime dateRegisteredAsMember { get; set; }
 
         //navigation properties
