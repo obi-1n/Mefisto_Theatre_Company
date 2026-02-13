@@ -15,7 +15,11 @@ namespace ONnegha_Mefisto_Theatre_Company.Models
         public string Title { get; set; }
         public string Content { get; set; }
 
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:d}")] //Format as ShortDateTime
         public DateTime DatePosted { get; set; }
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:d}")] //Format as ShortDateTime
         public DateTime? LastEdited { get; set; }
 
         // Navigation property to the Staff who created the post

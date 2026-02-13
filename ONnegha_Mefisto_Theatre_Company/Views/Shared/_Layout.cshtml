@@ -25,8 +25,8 @@
                     {
                         if (User.IsInRole("Editor"))
                         {
-                            <li>@Html.ActionLink("My Posts", "Index", "Member", new { area = "" }, new { @class = "nav-link" })</li>
-                            <li>@Html.ActionLink("Post an ad", "Create", "Member", new { area = "" }, new { @class = "nav-link" })</li>
+                            <li>@Html.ActionLink("My Posts", "Index", "Editor", new { area = "" }, new { @class = "nav-link" })</li>
+                            <li>@Html.ActionLink("Post an ad", "Create", "Editor", new { area = "" }, new { @class = "nav-link" })</li>
                         }
                         if (User.IsInRole("Admin"))
                         {
@@ -34,7 +34,7 @@
                         }
                         if (User.IsInRole("Moderator"))
                         {
-                            <li>@Html.ActionLink("Moderator", "Index", "Moderator", new { area = "" }, new { @class = "nav-link" })</li>
+                            <li>@Html.ActionLink("View Comments", "Index", "Moderator", new { area = "" }, new { @class = "nav-link" })</li>
                         }
                     }
                 </ul>
