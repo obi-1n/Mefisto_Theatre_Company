@@ -13,8 +13,12 @@ namespace ONnegha_Mefisto_Theatre_Company.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CommentId { get; set; }
         public string Content { get; set; }
+        [Display(Name ="Approved")]
         public bool isApproved { get; set; }
+
+        [Display(Name = "Date Commented")]
         public DateTime dateCommented { get; set; }
+        [Display(Name = "Last Edited")]
         public DateTime? dateEdited { get; set; }
 
         //navigation properties

@@ -28,7 +28,7 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
             .Include(p => p.Category)
             .Include(p => p.Staff);
 
-            //get the Id of the logged in user, using Identity
+            //get the Id of the logged in editor, using Identity
             //user Id is a string
             var staffId = User.Identity.GetUserId();
 
@@ -178,55 +178,55 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
             return View(post);
         }
 
-        // GET: Posts/Delete/5
-        //this method will delete a post by id
-        public ActionResult Delete(int? id)
-        {
-            //if id is null then return a bad request error
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            //first find a post in the Posts tables by id
-            Post post = db.Posts.Find(id);
+        //// GET: Posts/Delete/5
+        ////this method will delete a post by id
+        //public ActionResult Delete(int? id)
+        //{
+        //    //if id is null then return a bad request error
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    //first find a post in the Posts tables by id
+        //    Post post = db.Posts.Find(id);
 
-            //next find the post category by seraching through the Categories table
-            // for a category by id which is the foreign key in that post
-            var category = db.Categories.Find(post.CategoryId);
+        //    //next find the post category by seraching through the Categories table
+        //    // for a category by id which is the foreign key in that post
+        //    var category = db.Categories.Find(post.CategoryId);
 
-            //assign the category to the Category navigational property Category
-            //so we can display the category name
-            post.Category = category;
+        //    //assign the category to the Category navigational property Category
+        //    //so we can display the category name
+        //    post.Category = category;
 
-            //if the post is a null object
-            //then return a not found error message
-            if (post == null)
-            {
-                return HttpNotFound();
-            }
-            //otherwise return the Delete view and send the post to the view
-            //so post details can be viwed
-            return View(post);
-        }
+        //    //if the post is a null object
+        //    //then return a not found error message
+        //    if (post == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    //otherwise return the Delete view and send the post to the view
+        //    //so post details can be viwed
+        //    return View(post);
+        //}
 
-        // POST: Posts/Delete/5
-        [HttpPost, ActionName("Delete")]//this is important
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            //find post by id in Posts tables
-            Post post = db.Posts.Find(id);
+        //// POST: Posts/Delete/5
+        //[HttpPost, ActionName("Delete")]//this is important
+        //[ValidateAntiForgeryToken]
+        //public ActionResult DeleteConfirmed(int id)
+        //{
+        //    //find post by id in Posts tables
+        //    Post post = db.Posts.Find(id);
 
-            //remove post from Posts table
-            db.Posts.Remove(post);
+        //    //remove post from Posts table
+        //    db.Posts.Remove(post);
 
-            //save changes in tha database
-            db.SaveChanges();
+        //    //save changes in tha database
+        //    db.SaveChanges();
 
-            //redirect ti Index action in MemberController
-            return RedirectToAction("Index");
+        //    //redirect ti Index action in MemberController
+        //    return RedirectToAction("Index");
 
 
-        }
+        //}
     }
 }

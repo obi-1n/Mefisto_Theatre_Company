@@ -1,10 +1,14 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace ONnegha_Mefisto_Theatre_Company.Models
 {
@@ -42,6 +46,24 @@ namespace ONnegha_Mefisto_Theatre_Company.Models
             return userIdentity;
         }
 
+        // needing the user manager to get the role of the user
+        private ApplicationUserManager userManager;
+
+        // The current property is not mapped to the database 
+        // property to get the current role of the user logged in
+        [NotMapped]
+        public string CurrentRole
+        {
+            get
+            {
+                if (userManager == null)
+                {
+                    userManager = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                }
+
+                return userManager.GetRoles(this.Id).Single();
+            }
+        }
     }
 
 }

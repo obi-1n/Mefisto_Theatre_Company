@@ -7,7 +7,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using ONnegha_Mefisto_Theatre_Company.Models;
-using ONnegha_Mefisto_Theatre_Company.Models.ViewModels;
+using ONnegha_Mefisto_Theatre_Company.ViewModels;
 
 namespace ONnegha_Mefisto_Theatre_Company.Controllers
 {

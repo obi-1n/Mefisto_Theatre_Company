@@ -1,0 +1,43 @@
+﻿@model IEnumerable<ONnegha_Mefisto_Theatre_Company.Models.Comment>
+
+@{
+    ViewBag.Title = "ViewComments";
+}
+
+<h2>ViewComments</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Post.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Content)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.dateCommented)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Post.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Content)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.dateCommented)
+        </td>
+        <td>
+            @Html.ActionLink("Delete", "DeleteComment", new { id = item.CommentId, memberId = item.MemberId })
+        </td>
+    </tr>
+}
+
+</table>

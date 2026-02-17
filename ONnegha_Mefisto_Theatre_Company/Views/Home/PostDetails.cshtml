@@ -1,0 +1,94 @@
+﻿@model ONnegha_Mefisto_Theatre_Company.Models.Post
+@using Microsoft.AspNet.Identity
+
+@{
+    ViewBag.Title = Model.Title;
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg mt-4">
+                <div class="card-body">
+                    <h1 class="text-center">@Model.Title</h1>
+                    <p class="text-muted text-center">By <strong>@Model.Staff.FirstName @Model.Staff.LastName</strong> | Published on @Model.DatePosted.ToString("MMMM dd, yyyy")</p>
+                    <hr />
+
+                    <div class="content">
+                        <p>@Model.Content</p>
+                    </div>
+
+                    <hr />
+                    <h3>Comments</h3>
+
+                    @if (Model.Comments.Any())
+                    {
+                        <ul class="list-group">
+                            @foreach (var comment in Model.Comments.Where(c => c.isApproved))
+                            {
+                                <li class="list-group-item">
+                                    <strong>@comment.Member.FirstName</strong> (@comment.dateCommented.ToString("dd MMM yyyy")) <br />
+                                    @comment.Content
+                                    <br />
+                                    @if (User.IsInRole("Admin") || User.IsInRole("Moderator") || comment.MemberId == User.Identity.GetUserId())
+                                    {
+                                        <a class="btn btn-secondary mt-3"
+                                           href="@Url.Action("Delete", "Comment", new { id = Model.PostId })">Delete</a>
+                                    }
+                                    @if (comment.MemberId == User.Identity.GetUserId())
+                                    {
+                                        <a class="btn btn-secondary mt-3"
+                                           href="@Url.Action("EditComment", "Member", new { id = Model.PostId })">Edit</a>
+                                    }
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p>No comments yet.</p>
+                    }
+
+                    @if (User.IsInRole("Suspended"))
+                    {
+                        <p>You have been Suspended due to misconduct</p>
+                    }
+
+                    @if (User.IsInRole("Member"))
+                    {
+                        <hr />
+
+                        using (Html.BeginForm("CreateComment", "Comment", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <input type="hidden" name="PostId" value="@Model.PostId" />
+
+                            <div class="mb-3">
+                                <label class="form-label">Comment</label>
+                                <textarea name="Content" class="form-control" required></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        }
+
+                    }
+
+                    <a class="btn btn-secondary mt-3" href="@Url.Action("Index", "Home")">Back to Blog</a>
+                    @if (User.IsInRole("Admin") || User.IsInRole("Editor"))
+                    {
+                        <a class="btn btn-secondary mt-3"
+                           href="@Url.Action("DeletePost", "Post", new { id = Model.PostId })">Delete</a>
+                    }
+                    @if (User.IsInRole("Editor") && Model.Staff.Id == User.Identity.GetUserId())
+                    {
+                        <a class="btn btn-secondary mt-3"
+                           href="@Url.Action("Edit", "Editor", new { id = Model.PostId })">Edit</a>
+                    }
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

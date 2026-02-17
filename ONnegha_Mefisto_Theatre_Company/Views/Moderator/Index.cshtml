@@ -1,0 +1,35 @@
+﻿@model IEnumerable<ONnegha_Mefisto_Theatre_Company.Models.Member>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Members</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.UserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.isSuspended)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.UserName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.isSuspended)
+        </td>
+        <td>
+            @Html.ActionLink("View Comments", "ViewComments", new { id = item.Id }) |
+            @Html.ActionLink("Suspend", "SuspendMember", new { id = item.Id })
+        </td>
+    </tr>
+}
+
+</table>

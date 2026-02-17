@@ -58,6 +58,13 @@ namespace ONnegha_Mefisto_Theatre_Company.Models
                 {
                     roleManager.Create(new IdentityRole("Member"));
                 }
+
+                //if the suspended role doesnt exist, create it
+                //suspended users cant leave comments any more
+                if (!roleManager.RoleExists("Suspended"))
+                {
+                    roleManager.Create(new IdentityRole("Suspended"));
+                }
                 context.SaveChanges();
 
 
@@ -181,11 +188,11 @@ namespace ONnegha_Mefisto_Theatre_Company.Models
                     Street = "123 Happy St",
                     City = "Glasgow",
                     PostCode = "G56 7DF",
-                    IsSuspended = false,
                     RegisteredAt = DateTime.Now,
                     dateRegisteredAsMember = DateTime.Now,
                     EmailConfirmed = true,
-                    PhoneNumber = "07563902144"
+                    PhoneNumber = "07563902144",
+                    isSuspended = false
                 };
                 if (userManager.FindByName("bill@gmail.com") == null)
                 {
@@ -195,8 +202,8 @@ namespace ONnegha_Mefisto_Theatre_Company.Models
 
                 var steve = new Member
                 {
-                    UserName = "Steve",
-                    Email = "steveb@gmail.com",
+                    UserName = "steve@gmail.com",
+                    Email = "steve@gmail.com",
                     EmailConfirmed = true,
                     FirstName = "Steve",
                     LastName = "Fist",
@@ -205,9 +212,10 @@ namespace ONnegha_Mefisto_Theatre_Company.Models
                     PostCode = "EH6 7DF",
                     RegisteredAt = DateTime.Now.AddMonths(-10),
                     dateRegisteredAsMember = DateTime.Now,
-                    PhoneNumber = "07988441227"
+                    PhoneNumber = "07988441227",
+                    isSuspended = false
                 };
-                if (userManager.FindByName("steveb@gmail.com") == null)
+                if (userManager.FindByName("steve@gmail.com") == null)
                 {
                     userManager.Create(steve, "member3");
                     userManager.AddToRoles(steve.Id, "Member");
@@ -223,16 +231,16 @@ namespace ONnegha_Mefisto_Theatre_Company.Models
                     Street = "56 Grumpy St",
                     City = "Glasgow",
                     PostCode = "G56 7DF",
-                    IsSuspended = true,
                     RegisteredAt = DateTime.Now.AddYears(-1),
                     dateRegisteredAsMember = DateTime.Now.AddMonths(-6),
                     EmailConfirmed = true,
-                    PhoneNumber = "07421558903"
+                    PhoneNumber = "07421558903",
+                    isSuspended = true
                 };
                 if (userManager.FindByName("bob@gmail.com") == null)
                 {
-                    userManager.Create(bob, "member2");
-                    userManager.AddToRoles(bob.Id, "Member");
+                    userManager.Create(bob, "suspended1");
+                    userManager.AddToRoles(bob.Id, "Suspended");
                 }
 
                 //create some regular users
@@ -293,15 +301,15 @@ namespace ONnegha_Mefisto_Theatre_Company.Models
                 var post1 = new Post()
                 {
                     Title = "New Play Announced",
-                    Content = "We are excited to announce our new play, 'The Great Gatsby', which will be opening next month. Stay tuned for more details!",
+                    Content = "We are thrilled to share some wonderful news with you! Our upcoming production of “The Great Gatsby” is officially set to open next month, and we can’t wait for you to experience this exciting new play. Our team has been hard at work bringing this classic story to life on stage, and we’re looking forward to unveiling more about the cast, creative process, and behind‑the‑scenes moments as opening night approaches.\r\nStay tuned for additional updates, special previews, and exclusive insights as we count down to the premiere!",
                     DatePosted = DateTime.Now.AddDays(-10),
-                    Staff = context.Users.OfType<Staff>().First(u => u.UserName == "editor1@MTC.com"),
+                    Staff = jeff,
                     Category = news
                 };
                 var post2 = new Post()
                 {
                     Title = "Upcoming Events",
-                    Content = "Join us for our upcoming events, including a special performance of 'Romeo and Juliet' and a behind-the-scenes tour of our theatre.",
+                    Content = "Join us for a series of exciting upcoming events at our theatre! We’re especially delighted to present a special performance of “Romeo and Juliet,” where our talented cast will bring this timeless story of love and conflict to life in a fresh and captivating way.\r\nIn addition to the performance, we’re opening our doors for an exclusive behind‑the‑scenes tour, giving you a rare opportunity to step into the world of stagecraft. You’ll explore the sets, meet members of our creative team, and discover how the magic of theatre comes together from rehearsal to final curtain.\r\nWe look forward to welcoming you—stay tuned for dates, details, and more surprises!",
                     DatePosted = DateTime.Now.AddDays(-5),
                     Staff = jane,
                     Category = events
@@ -309,7 +317,7 @@ namespace ONnegha_Mefisto_Theatre_Company.Models
                 var post3 = new Post()
                 {
                     Title = "Play Review: 'Hamlet'",
-                    Content = "Our recent production of 'Hamlet' received rave reviews from critics and audiences alike. Read our full review to find out why it was such a hit!",
+                    Content = "Our recent production of “Hamlet” has been met with overwhelmingly positive acclaim from both critics and audiences alike. Reviewers praised the powerful performances, bold direction, and striking visual design, all of which brought new depth and energy to Shakespeare’s classic tragedy. Audience members also shared enthusiastic feedback, highlighting the emotional intensity and fresh interpretation that made the show truly unforgettable.\r\nIf you’re curious to learn more about what made this production such a standout success, be sure to read our full review—packed with insights, behind‑the‑scenes notes, and a closer look at the elements that made Hamlet one of our most celebrated performances to date.",
                     DatePosted = DateTime.Now.AddDays(-2),
                     Staff = jeff,
                     Category = reviews
@@ -317,10 +325,26 @@ namespace ONnegha_Mefisto_Theatre_Company.Models
                 var post4 = new Post()
                 {
                     Title = "Interview with the Director",
-                    Content = "We sat down with our director, Jane Jenkins, to discuss her vision for our upcoming production of 'Macbeth' and what audiences can expect.",
+                    Content = "We recently had the pleasure of sitting down with our director, Jane Jenkins, for an in‑depth conversation about her creative vision for our upcoming production of Macbeth. During our discussion, she shared insights into her artistic approach, the themes she plans to highlight, and the unique atmosphere she hopes to bring to this iconic Shakespearean tragedy.\r\nJane also offered a glimpse into what audiences can look forward to—from bold staging choices and innovative design elements to the emotional nuances she aims to explore with the cast. Her passion for the material and her fresh interpretation promise an unforgettable theatrical experience.\r\nStay tuned as we reveal more behind‑the‑scenes details and exclusive previews in the weeks ahead!",
                     DatePosted = DateTime.Now.AddDays(-1),
                     Staff = jane,
                     Category = interviews
+                };
+                var post5 = new Post()
+                {
+                    Title = "Upcoming Auditions",
+                    Content = "We’re excited to announce that auditions for our upcoming play are just around the corner! Whether you’re a seasoned performer or someone looking to step onto the stage for the first time, we encourage you to come out and showcase your talent.\r\nAuditions will include readings from the script, opportunities to demonstrate your range, and a chance to meet members of our creative team. We welcome performers of all experience levels and backgrounds, and we’re looking forward to discovering the cast who will bring this production to life.\r\nStay tuned for audition dates, requirements, and signup details—coming soon!",
+                    DatePosted = DateTime.Now.AddDays(-2),
+                    Staff = jeff,
+                    Category= news      
+                };
+                var post6 = new Post()
+                {
+                    Title = "Acting Classes",
+                    Content = "We’re excited to announce that a new round of acting classes is starting soon! Whether you’re completely new to the stage or looking to sharpen your performance skills, our classes offer a welcoming, supportive environment for all experience levels.\r\nParticipants will explore essential techniques such as character development, voice and movement, improvisation, and scene study. Our instructors bring professional theatre experience and a passion for helping performers grow in confidence, creativity, and craft.\r\nStay tuned for class schedules, registration details, and information on the different levels we’ll be offering. We can’t wait to help you take your next step as a performer!",
+                    DatePosted= DateTime.Now.AddDays(-1),
+                    Staff = jane,
+                    Category = events
                 };
 
                 if (!context.Posts.Any())
@@ -330,6 +354,8 @@ namespace ONnegha_Mefisto_Theatre_Company.Models
                     context.Posts.Add(post2);
                     context.Posts.Add(post3);
                     context.Posts.Add(post4);
+                    context.Posts.Add(post5);
+                    context.Posts.Add(post6);
                 }
 
 

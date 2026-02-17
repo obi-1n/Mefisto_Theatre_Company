@@ -1,4 +1,4 @@
-﻿using ONnegha_Mefisto_Theatre_Company.Models.ViewModels;
+﻿using ONnegha_Mefisto_Theatre_Company.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

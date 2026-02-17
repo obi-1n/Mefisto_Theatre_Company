@@ -3,15 +3,31 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    <title>Mefisto Theatre</title>
 
+    <link rel="icon" href="@Url.Content("~/Assessment_2_Resources/logo.jpg")" type="image/x-icon" />
+
+    @Styles.Render("~/Content/css")
+
+    <style type="text/css">
+        html, body {
+            background-color: #e6f2ff !important; /* light blue */
+        }
+
+        /* If your main content area has its own background, this ensures it matches */
+        .body-content,
+        .container.body-content {
+            background-color: transparent !important;
+        }
+    </style>
+
+    @Scripts.Render("~/bundles/modernizr")
+    @using Microsoft.AspNet.Identity
 </head>
 <body>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
         <div class="container">
-            @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            @Html.ActionLink("Mefisto Theatre Company", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -30,11 +46,19 @@
                         }
                         if (User.IsInRole("Admin"))
                         {
-                            <li>@Html.ActionLink("Admin", "Index", "Admin", new { area = "" }, new { @class = "nav-link" })</li>
+                            <li>@Html.ActionLink("Admin DashBoard", "Index", "Admin", new { area = "" }, new { @class = "nav-link" })</li>
                         }
                         if (User.IsInRole("Moderator"))
                         {
-                            <li>@Html.ActionLink("View Comments", "Index", "Moderator", new { area = "" }, new { @class = "nav-link" })</li>
+                            <li>@Html.ActionLink("Moderator DashBoard", "Index", "Moderator", new { area = "" }, new { @class = "nav-link" })</li>
+                        }
+                        if (User.IsInRole("Member"))
+                        {
+                            <li>@Html.ActionLink("Edit Details", "EditDetails", "Home", new { @class = "nav-link" })</li>
+                        }
+                        if (User.IsInRole("User"))
+                        {
+                            <li>@Html.ActionLink("Become A Member", "becomeMember", "Home", new { @class = "nav-link" })</li>
                         }
                     }
                 </ul>

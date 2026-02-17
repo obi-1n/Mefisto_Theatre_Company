@@ -1,44 +1,34 @@
 ﻿@model IEnumerable<ONnegha_Mefisto_Theatre_Company.Models.Post>
 
 @{
-    Layout = null;
+    ViewBag.Title = "ViewAllPosts";
 }
 
-<!DOCTYPE html>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Category.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Staff.FirstName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Content)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DatePosted)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastEdited)
+        </th>
+        <th></th>
+    </tr>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>ViewAllPosts</title>
-</head>
-<body>
-    <p>
-        @Html.ActionLink("Create New", "Create")
-    </p>
-    <table class="table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Category.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Staff.FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Content)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DatePosted)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastEdited)
-            </th>
-            <th></th>
-        </tr>
-    
-    @foreach (var item in Model) {
+    @foreach (var item in Model)
+    {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Category.Name)
@@ -59,13 +49,10 @@
                 @Html.DisplayFor(modelItem => item.LastEdited)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.PostId }) |
-                @Html.ActionLink("Details", "Details", new { id=item.PostId }) |
-                @Html.ActionLink("Delete", "Delete", new { id=item.PostId })
+                @Html.ActionLink("Edit", "Edit", new { id = item.PostId }) |
+                @Html.ActionLink("Delete", "DeletePost", "Post", new { id = item.PostId }, null)
             </td>
         </tr>
     }
-    
-    </table>
-</body>
-</html>
+
+</table>
