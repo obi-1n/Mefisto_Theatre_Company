@@ -25,8 +25,9 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
         {
             return View();
         }
+
         //******************************************************************************************************
-        //******************************************************************************************************
+
         //STAFF
         // GET: Staff
         //view all staff members
@@ -40,10 +41,9 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
             return View(staff);
         }
 
-        //-----------------------------------------------------------------------------
 
         //create a new staff member
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]//only Admins can call the CreateStaff action,
         [HttpGet]
         public ActionResult CreateStaff()
         {
@@ -117,7 +117,6 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
             return View(model);
         }
 
-        //-----------------------------------------------------------------------------
 
         //view staff member details
         public ActionResult StaffDetails(string id)
@@ -138,7 +137,6 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
             return View(staff);
         }   
 
-        //-----------------------------------------------------------------------------
 
         //edit staff member details
         [Authorize (Roles = "Admin")]//only Admins can call the EditStaff action,
@@ -195,8 +193,10 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
             return View(model);
         }
 
-        //-----------------------------------------------------------------------------
+        
         //delete staff member
+
+        [Authorize(Roles = "Admin")]//only Admins can call the DeleteStaff action,
         public async Task<ActionResult> DeleteStaff(string id)
         {
             if (id == null)
@@ -204,7 +204,7 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            //check we arent deleting our own account
+            //check we aren't deleting our own account
             if (id == User.Identity.GetUserId())
             {
                 return RedirectToAction("Index", "Admin");
@@ -220,14 +220,26 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
                 return HttpNotFound();
             }
 
+            //delete all posts created by the staff member first to avoid constraint violation
+            var posts = db.Posts.Where(p => p.StaffId == id).ToList();
+            foreach (var post in posts)
+            {
+                //delete comments for each post
+                var comments = db.Comments.Where(c => c.PostId == post.PostId).ToList();
+                db.Comments.RemoveRange(comments);
+            }
+            db.Posts.RemoveRange(posts);
+            db.SaveChanges();
+
             //delete the user
             await userManager.DeleteAsync(staff);
 
             return RedirectToAction("Index", "Admin");
         }
 
-        //-----------------------------------------------------------------------------
+        
         //change staff member role
+        [Authorize(Roles = "Admin")]//only Admins can call the ChangeRole action,
         [HttpGet]
         public async Task<ActionResult> ChangeRole(string id)
         {
@@ -272,7 +284,6 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
         //Post: Users/ChangeRole/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [ActionName("ChangeRole")]
         public async Task<ActionResult> ChangeRoleConfirmed(string id, [Bind(Include = "Role")] ChangeRoleViewModel model)
         {
             // Can't change your own role.
@@ -306,16 +317,87 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
         }
 
         //******************************************************************************************************
-        //CATEGORIES
-        // GET: Categories
+        //Users
+        // GET: Users
 
-        //view all categories
-        [Authorize(Roles = "Admin")]//only Admins can call the ViewAllCategories action,
-        public ActionResult ViewAllCategories()
+        public ActionResult ViewAllUsers()
         {
-            //return the ViewAllCategories view that displays a list of categories
-            return View(db.Categories.ToList());
+            // Get all users with their roles
+            var users = db.Users.OrderBy(u => u.FirstName).ToList();
+            var userList = new List<UserListViewModel>();
+
+            foreach (var user in users)
+            {
+                // Get the user's role
+                string role = db.Roles.FirstOrDefault(r => r.Users.Any(u => u.UserId == user.Id))?.Name;
+
+                // Filter to only display users with the role member user or suspended
+                if (role == "Member" || role == "User" || role == "Suspended")
+                {
+                    userList.Add(new UserListViewModel
+                    {
+                        Id = user.Id,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        UserName = user.UserName,
+                        RegisteredAt = user.RegisteredAt,
+                        Role = role,
+                        UserType = user is Staff ? "Staff" : (user is Member ? "Member" : "User")
+                    });
+                }
+            }
+
+            // Return the ViewAllUsers view with the list of UserListViewModel
+            return View(userList);
         }
+
+        // Delete User
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> DeleteUser(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            // check we aren't deleting our own account
+            if (id == User.Identity.GetUserId())
+            {
+                return RedirectToAction("ViewAllUsers");
+            }
+
+            //find user by id
+            User user = db.Users.Find(id);
+
+            //if user id is null give error message
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+
+            // Use appropriate logic based on user type
+            if (user is Member member)
+            {
+                // Deleting a member: delete their comments first
+                var comments = db.Comments.Where(c => c.MemberId == id).ToList();
+                db.Comments.RemoveRange(comments);
+                db.SaveChanges();
+
+                var userManager = new UserManager<User>(new UserStore<User>(db));
+                await userManager.DeleteAsync(member);
+            }
+            else
+            {
+                // Just a base User 
+                var userManager = new UserManager<User>(new UserStore<User>(db));
+                await userManager.DeleteAsync(user);
+            }
+
+            return RedirectToAction("ViewAllUsers");
+        }
+
+        //******************************************************************************************************
+        //Posts
 
         //view all posts in a category
         [Authorize(Roles = "Admin")] //only Admins can call the ViewAllPosts action,
@@ -327,82 +409,6 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
             //send the list to the view named ViewAllPosts
             return View(posts);
         }
-
-        //view all comments for a post
-        [Authorize(Roles = "Admin")] //only Admins can call the ViewAllComments action,
-        public ActionResult ViewAllComments(int? id)
-        {
-            //get all comments
-            List<Comment> comments = db.Comments.Include(c => c.Member).Include(c => c.Post).ToList();
-            //send the list to the view named ViewAllComments
-            return View(comments);
-        }
-
-
-        //// GET: Admin/Create
-        //public ActionResult Create()
-        //{
-        //    return View();
-        //}
-
-        //// POST: Admin/Create
-        //[HttpPost]
-        //public ActionResult Create(FormCollection collection)
-        //{
-        //    try
-        //    {
-        //        // TODO: Add insert logic here
-
-        //        return RedirectToAction("Index");
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
-
-        //// GET: Admin/Edit/5
-        //public ActionResult Edit(int id)
-        //{
-        //    return View();
-        //}
-
-        //// POST: Admin/Edit/5
-        //[HttpPost]
-        //public ActionResult Edit(int id, FormCollection collection)
-        //{
-        //    try
-        //    {
-        //        // TODO: Add update logic here
-
-        //        return RedirectToAction("Index");
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
-
-        //// GET: Admin/Delete/5
-        //public ActionResult Delete(int id)
-        //{
-        //    return View();
-        //}
-
-        //// POST: Admin/Delete/5
-        //[HttpPost]
-        //public ActionResult Delete(int id, FormCollection collection)
-        //{
-        //    try
-        //    {
-        //        // TODO: Add delete logic here
-
-        //        return RedirectToAction("Index");
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
+        
     }
 }

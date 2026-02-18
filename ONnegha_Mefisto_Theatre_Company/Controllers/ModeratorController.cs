@@ -34,9 +34,10 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
         [Authorize(Roles = "Moderator")]
         public ActionResult ViewComments(string id)
         {
-            if (id == null)
+            //if the id parameter is null or empty then we are redirecting the user to the Index action
+            if (string.IsNullOrEmpty(id))
             {
-                return RedirectToAction("ViewComments", new { id = id });
+                return RedirectToAction("Index");
             }
             //select all comments from the Comments table where the UserId is the same as the id parameter
             var comments = db.Comments
@@ -55,18 +56,37 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
         [Authorize(Roles = "Moderator")]
         public ActionResult DeleteComment(int? id)
         {
+            //if the id parameter is null then we are returning a bad request error
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            //find the comment in the database using the id parameter
             Comment comment = db.Comments.Find(id);
             if (comment == null)
             {
                 return HttpNotFound();
             }
+
+            //store the member id before deleting the comment so we can check if there are any more comments for this member after deletion
+            string memberId = comment.MemberId;
+
+            //remove the comment from the database
             db.Comments.Remove(comment);
             db.SaveChanges();
-            return ViewComments(comment.MemberId);
+
+            // Check if there are any remaining comments for this member
+            bool hasMoreComments = db.Comments.Any(c => c.MemberId == memberId);
+
+            //if there are more comments for this member, redirect to the ViewComments action to show the remaining comments
+            if (hasMoreComments)
+            {
+                return RedirectToAction("ViewComments", new { id = memberId });
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
         }
 
         //Suspend Member action is called when moderator clicks the "Suspend" link next to a comment in the Index view
@@ -75,17 +95,19 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
         [Authorize(Roles = "Moderator")]
         public async Task<ActionResult> SuspendMember(string id)
         {
-
+            //if the id parameter is null then we are returning a bad request error
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
+            //we are using the UserManager class to manage users and their roles in the database
             using (var userManager = new UserManager<Member>(new UserStore<Member>(db)))
             {
                 //get user by id
                 Member member = await userManager.FindByIdAsync(id);
 
+                //if the user is not found in the database then we are returning a not found error
                 if (member == null)
                 {
                     return HttpNotFound();
@@ -93,7 +115,9 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
 
                 //get user's current roles
                 var userRoles = await userManager.GetRolesAsync(id);
-                string oldRole = userRoles.FirstOrDefault() ?? ""; //only one role per user
+
+                //only one role per user
+                string oldRole = userRoles.FirstOrDefault() ?? ""; 
 
                 //get all roles from the database
                 var items = db.Roles.Where(r => r.Name == "Suspended" || r.Name == "Member").Select(r => new SelectListItem
@@ -120,11 +144,13 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
         [ActionName("SuspendMember")]
         public async Task<ActionResult> SuspendMemberConfirmed(string id, [Bind(Include = "Role")] ChangeRoleViewModel model)
         {
-
+            //if the id parameter is null then we are returning a bad request error
             if (ModelState.IsValid)
             {
+                //call an instance of the UserManager class to manage users and their roles in the database
                 var userManager = new UserManager<Member>(new UserStore<Member>(db));
 
+                //get user by id
                 Member member = await userManager.FindByIdAsync(id); //get user by id
 
                 //get user's current role
@@ -144,12 +170,23 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
                 if (model.Role == "Suspended")
                 {
                     member.isSuspended = true;
+
+                    // Set all comments by this member to isApproved = false
+                    var memberComments = db.Comments.Where(c => c.MemberId == id);
+                    foreach (var comment in memberComments)
+                    {
+                        comment.isApproved = false;
+                    }
+
+                    // Persist comment updates
+                    db.SaveChanges();
                 }
                 else
                 {
                     member.isSuspended = false;
                 }
-                
+
+                //update the user in the database with the new role and isSuspended property
                 await userManager.UpdateAsync(member);
 
                 return RedirectToAction("Index", "Moderator");

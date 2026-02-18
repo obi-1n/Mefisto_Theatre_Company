@@ -24,16 +24,20 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
         }
 
         // GET: Member/EditComment/5
+        //edit comment details
         [Authorize(Roles = "Member")]
         public ActionResult EditComment(int? id)
         {
+            //check if the id is null, if it is return a bad request error
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
+            //find the comment in the database using the id
             Comment comment = db.Comments.Find(id);
 
+            //check if the comment is null, if it is return a not found error
             if (comment == null)
             {
                 return HttpNotFound();
@@ -49,6 +53,7 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
             //return the EditComment view that allows editing of staff member details
             return View(new EditCommentViewModel
             {
+                //populate the EditCommentViewModel with the comment details
                 Content = comment.Content,
                 dateEdited = DateTime.Now
             });
@@ -61,17 +66,26 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
         public ActionResult EditComment(int id,
             [Bind(Include = "Content")] EditCommentViewModel model)
         {
+            //check if the model state is valid
             if (ModelState.IsValid)
             {
+                //find the comment in the database using the id
                 var db = new TheatreDbContext();
                 Comment comment = db.Comments.Find(id);
 
-                UpdateModel(comment);//update the comment details by using the model
+                //update the comment details by using the model
+                UpdateModel(comment);
 
+                //set the date edited to the current date and time
                 comment.dateEdited = DateTime.Now;
-                db.Entry(comment).State = EntityState.Modified;
-                int result = db.SaveChanges();//update the comment details in the database
 
+                //mark the comment as modified
+                db.Entry(comment).State = EntityState.Modified;
+
+                //update the comment details in the database
+                int result = db.SaveChanges();
+
+                //if the update is successful, redirect to the post details page of the post that the comment belongs to
                 if (result > 0)
                 {
                     return RedirectToAction("PostDetails", "Home", new { id = comment.PostId });
@@ -79,6 +93,7 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
 
             }
 
+            //if the model state is not valid, return the EditComment view with the model to display validation errors
             return View(model);
         }
 

@@ -24,21 +24,25 @@
                     @if (Model.Comments.Any())
                     {
                         <ul class="list-group">
+                            @* only display approved comments
+                                comments made by suspended users are automatically flagged as unapproved and wont display in the comment section*@
                             @foreach (var comment in Model.Comments.Where(c => c.isApproved))
                             {
                                 <li class="list-group-item">
                                     <strong>@comment.Member.FirstName</strong> (@comment.dateCommented.ToString("dd MMM yyyy")) <br />
                                     @comment.Content
                                     <br />
+                                    @*Only admins moderators and the member that created the comment get the option to delete a comment*@
                                     @if (User.IsInRole("Admin") || User.IsInRole("Moderator") || comment.MemberId == User.Identity.GetUserId())
                                     {
                                         <a class="btn btn-secondary mt-3"
-                                           href="@Url.Action("Delete", "Comment", new { id = Model.PostId })">Delete</a>
+                                           href="@Url.Action("Delete", "Comment", new { id = comment.CommentId })">Delete</a>
                                     }
+                                    @* Only the member that created the comment have the option to edit it *@
                                     @if (comment.MemberId == User.Identity.GetUserId())
                                     {
                                         <a class="btn btn-secondary mt-3"
-                                           href="@Url.Action("EditComment", "Member", new { id = Model.PostId })">Edit</a>
+                                           href="@Url.Action("EditComment", "Member", new { id = comment.CommentId })">Edit</a>
                                     }
                                 </li>
                             }
@@ -49,11 +53,13 @@
                         <p>No comments yet.</p>
                     }
 
+                    @* display suspension message if user is suspended *@
                     @if (User.IsInRole("Suspended"))
                     {
-                        <p>You have been Suspended due to misconduct</p>
+                        <p>You have been Suspended due to misconduct, and can no leave comments</p>
                     }
 
+                    @* display add comment form if user is a registered member *@
                     @if (User.IsInRole("Member"))
                     {
                         <hr />
@@ -74,12 +80,14 @@
 
                     }
 
+                    @* All editors and admins can delete a post *@
                     <a class="btn btn-secondary mt-3" href="@Url.Action("Index", "Home")">Back to Blog</a>
                     @if (User.IsInRole("Admin") || User.IsInRole("Editor"))
                     {
                         <a class="btn btn-secondary mt-3"
                            href="@Url.Action("DeletePost", "Post", new { id = Model.PostId })">Delete</a>
                     }
+                    @* Only the editor that made the post has the option to edit it *@
                     @if (User.IsInRole("Editor") && Model.Staff.Id == User.Identity.GetUserId())
                     {
                         <a class="btn btn-secondary mt-3"

@@ -197,6 +197,7 @@
     <Compile Include="ViewModels\EditDetailsViewModel.cs" />
     <Compile Include="ViewModels\EditStaffViewModel.cs" />
     <Compile Include="ViewModels\ManageViewModels.cs" />
+    <Compile Include="ViewModels\UserListViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assessment_2_Resources\favicon_io %281%29\android-chrome-192x192.png" />
@@ -278,7 +279,6 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
-    <Content Include="Views\Admin\ViewAllCategories.cshtml" />
     <Content Include="Views\Admin\ViewAllPosts.cshtml" />
     <Content Include="Views\Editor\Index.cshtml" />
     <Content Include="Views\Editor\Create.cshtml" />
@@ -299,8 +299,10 @@
     <Content Include="Views\Comment\DeleteComment.cshtml" />
     <Content Include="Views\Member\EditComment.cshtml" />
     <Content Include="Views\Home\becomeMember.cshtml" />
-    <Content Include="Views\Member\EditDetails.cshtml" />
     <Content Include="Views\Home\EditDetails.cshtml" />
+    <Content Include="Views\Admin\ViewAllUsers.cshtml" />
+    <Content Include="Views\Editor\CreateCategory.cshtml" />
+    <Content Include="Views\Home\Welcome.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

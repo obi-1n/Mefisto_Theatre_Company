@@ -16,8 +16,6 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
         private TheatreDbContext db = new TheatreDbContext();
 
         // GET: Posts
-        //the index action is called when registered user click the link "My Posts"
-        //this method is returning a list of posts that where created by the logged in user (using user id)
         [Authorize(Roles = "Editor")]//only editors can access this method
         public ActionResult Index()
         {
@@ -41,7 +39,10 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
             return View(posts.ToList());
         }
 
+        //---------------------------------------------------------------------------------------------------
+        //Post
         // GET: Posts/Details/5
+        //post details
         public ActionResult Details(int? id) //? creates a nullable variable
         {
             if (id == null)
@@ -64,6 +65,7 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
         }
 
         // GET: Editor/Create
+        //create a new post
         public ActionResult Create()
         {
             //send the list of categories to the view using a ViewBag
@@ -75,8 +77,6 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
         }
 
         // POST: Posts/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "PostId, Title, Content, CategoryId")] Post post)
@@ -115,9 +115,7 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
         }
 
         // GET: Posts/Edit/5
-        //this method returns the Edit form to the browser
-        //togheter with the an instance of post
-        //so user can make changes
+        //edit post
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -142,9 +140,6 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
         }
 
         // POST: Posts/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        //this method gets the edited/modified post and updates the changes in the database
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "PostId, Title, Content, CategoryId")] Post post)
@@ -178,55 +173,53 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
             return View(post);
         }
 
-        //// GET: Posts/Delete/5
-        ////this method will delete a post by id
-        //public ActionResult Delete(int? id)
-        //{
-        //    //if id is null then return a bad request error
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    //first find a post in the Posts tables by id
-        //    Post post = db.Posts.Find(id);
+        // -----------------------------------------------------------------------------------------------------------
+        //Category
+        // Allow Editors to create new categories
+        [Authorize(Roles = "Editor")]
+        public ActionResult CreateCategory()
+        {
+            return View();
+        }
 
-        //    //next find the post category by seraching through the Categories table
-        //    // for a category by id which is the foreign key in that post
-        //    var category = db.Categories.Find(post.CategoryId);
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Editor")]
+        public ActionResult CreateCategory([Bind(Include = "Name")] Category category)
+        {
+            // Validate the model state first
+            if (!ModelState.IsValid)
+            {
+                return View(category);
+            }
 
-        //    //assign the category to the Category navigational property Category
-        //    //so we can display the category name
-        //    post.Category = category;
+            // Validate that the category name is not empty or whitespace
+            if (string.IsNullOrWhiteSpace(category.Name))
+            {
+                ModelState.AddModelError("Name", "Category name is required.");
+                return View(category);
+            }
 
-        //    //if the post is a null object
-        //    //then return a not found error message
-        //    if (post == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    //otherwise return the Delete view and send the post to the view
-        //    //so post details can be viwed
-        //    return View(post);
-        //}
+            // Trim whitespace from the category name
+            category.Name = category.Name.Trim();
 
-        //// POST: Posts/Delete/5
-        //[HttpPost, ActionName("Delete")]//this is important
-        //[ValidateAntiForgeryToken]
-        //public ActionResult DeleteConfirmed(int id)
-        //{
-        //    //find post by id in Posts tables
-        //    Post post = db.Posts.Find(id);
+            // Prevent duplicates (case-insensitive)
+            bool exists = db.Categories.Any(c => c.Name.ToLower() == category.Name.ToLower());
 
-        //    //remove post from Posts table
-        //    db.Posts.Remove(post);
+            // If a category with the same name already exists, add a model error and return to the view
+            if (exists)
+            {
+                ModelState.AddModelError("Name", "A category with this name already exists.");
+                return View(category);
+            }
 
-        //    //save changes in tha database
-        //    db.SaveChanges();
+            //add the new category to the database
+            db.Categories.Add(category);
+            db.SaveChanges();
 
-        //    //redirect ti Index action in MemberController
-        //    return RedirectToAction("Index");
+            // After creating a category, redirect editors back to their dashboard
+            return RedirectToAction("Index");
+        }
 
-
-        //}
     }
 }

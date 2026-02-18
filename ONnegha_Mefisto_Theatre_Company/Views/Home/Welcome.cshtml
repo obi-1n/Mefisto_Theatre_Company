@@ -1,0 +1,41 @@
+﻿@{
+    Layout = null;
+    ViewBag.Title = "Welcome";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Mefisto Theatre</title>
+    <style>
+        body {
+            background-color: #e6f2ff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .welcome-link {
+            font-size: 120px;
+            text-decoration: none;
+            font-weight: bold;
+            color: #333;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+        .welcome-link:hover {
+            transform: scale(1.1);
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <a href="@Url.Action("Index", "Home")" class="welcome-link">WELCOME!</a>
+</body>
+</html>
+
+
