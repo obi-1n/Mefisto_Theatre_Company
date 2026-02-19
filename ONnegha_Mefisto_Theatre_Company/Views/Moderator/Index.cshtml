@@ -6,30 +6,51 @@
 
 <h2>Members</h2>
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.UserName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.isSuspended)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.UserName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.isSuspended)
-        </td>
-        <td>
-            @Html.ActionLink("View Comments", "ViewComments", new { id = item.Id }) |
-            @Html.ActionLink("Suspend", "SuspendMember", new { id = item.Id })
-        </td>
-    </tr>
-}
-
-</table>
+<div class="table-responsive">
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.UserName)
+                </th>
+                <th class="text-center">
+                    @Html.DisplayNameFor(model => model.isSuspended)
+                </th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserName)
+                    </td>
+                    <td class="text-center">
+                        @if (item.isSuspended)
+                        {
+                            <span class="badge bg-danger">Suspended</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">Active</span>
+                        }
+                    </td>
+                    <td class="text-end text-nowrap">
+                        <div class="btn-group" role="group">
+                            @Html.ActionLink("View Comments", "ViewComments", new { id = item.Id }, new { @class = "btn btn-sm btn-outline-info" })
+                            @if (item.isSuspended)
+                            {
+                                @Html.ActionLink("Unsuspend", "SuspendMember", new { id = item.Id }, new { @class = "btn btn-sm btn-outline-success" })
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Suspend", "SuspendMember", new { id = item.Id }, new { @class = "btn btn-sm btn-outline-danger" })
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

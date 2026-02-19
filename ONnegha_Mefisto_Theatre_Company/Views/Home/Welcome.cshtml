@@ -21,11 +21,25 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         .welcome-link {
-            font-size: 120px;
+            font-size: 15vw; /* Use viewport units for responsiveness */
             text-decoration: none;
             font-weight: bold;
             color: #333;
             transition: transform 0.3s ease, color 0.3s ease;
+            text-align: center;
+            max-width: 90%; /* Prevent it from touching the sides */
+        }
+        /* Cap the font size for very large screens */
+        @@media (min-width: 1200px) {
+            .welcome-link {
+                font-size: 180px;
+            }
+        }
+        /* Adjust for mobile screens to ensure it stays readable */
+        @@media (max-width: 600px) {
+            .welcome-link {
+                font-size: 20vw;
+            }
         }
         .welcome-link:hover {
             transform: scale(1.1);

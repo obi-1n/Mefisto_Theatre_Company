@@ -81,6 +81,8 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "PostId, Title, Content, CategoryId")] Post post)
         {
+            //if the title or content of the post is empty, then the model state will be invalid
+
             //if parameter post is not null
             if (ModelState.IsValid)
             {
@@ -218,7 +220,7 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
             db.SaveChanges();
 
             // After creating a category, redirect editors back to their dashboard
-            return RedirectToAction("Index");
+            return RedirectToAction("Create");
         }
 
     }

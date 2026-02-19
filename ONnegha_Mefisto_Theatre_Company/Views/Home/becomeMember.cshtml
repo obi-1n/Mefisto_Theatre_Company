@@ -4,41 +4,37 @@
     ViewBag.Title = "becomeMember";
 }
 
-<h2>becomeMember</h2>
-
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     
-    <div class="form-horizontal">
-        <h4>Become a Member</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h4 class="card-title text-center mb-4">Become a Member</h4>
+                        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.OldRole, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.OldRole, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                @Html.ValidationMessageFor(model => model.OldRole, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                        <div class="mb-3">
+                            @Html.LabelFor(model => model.OldRole, htmlAttributes: new { @class = "form-label" })
+                            @Html.EditorFor(model => model.OldRole, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(model => model.OldRole, "", new { @class = "text-danger small" })
+                        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Role, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.Role, Model.Roles, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Role, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                        <div class="mb-3">
+                            @Html.LabelFor(model => model.Role, htmlAttributes: new { @class = "form-label" })
+                            @Html.DropDownListFor(model => model.Role, Model.Roles, new { @class = "form-select" })
+                            @Html.ValidationMessageFor(model => model.Role, "", new { @class = "text-danger small" })
+                        </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Become a Member" class="btn btn-default" />
+                        <div class="d-grid gap-2 mt-4">
+                            <input type="submit" value="Become a Member" class="btn btn-primary btn-lg" />
+                            @Html.ActionLink("Back to Home Page", "Index", null, new { @class = "btn btn-link" })
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 }
-
-<div>
-    @Html.ActionLink("Back to Home Page", "Index")
-</div>

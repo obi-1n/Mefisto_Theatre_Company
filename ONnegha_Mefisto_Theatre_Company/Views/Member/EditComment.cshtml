@@ -4,31 +4,32 @@
     ViewBag.Title = "EditComment";
 }
 
-<h2>EditComment</h2>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     
-    <div class="form-horizontal">
-        <h4>EditCommentViewModel</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.Content, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.TextAreaFor(model => model.Content, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Content, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h4 class="card-title text-center mb-4">Edit Comment</h4>
+                        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+                        <div class="mb-3">
+                            @Html.LabelFor(model => model.Content, htmlAttributes: new { @class = "form-label" })
+                            @Html.TextAreaFor(model => model.Content, new { @class = "form-control", rows = "5" })
+                            @Html.ValidationMessageFor(model => model.Content, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <input type="submit" value="Save Changes" class="btn btn-primary btn-lg" />
+                            @Html.ActionLink("Back to Home", "Index", "Home", null, new { @class = "btn btn-link" })
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 }
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>

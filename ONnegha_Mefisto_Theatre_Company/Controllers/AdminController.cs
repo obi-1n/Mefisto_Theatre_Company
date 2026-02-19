@@ -281,10 +281,10 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
             });
         }
 
-        //Post: Users/ChangeRole/5
+        //POST: Admin/ChangeRole/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ChangeRoleConfirmed(string id, [Bind(Include = "Role")] ChangeRoleViewModel model)
+        public async Task<ActionResult> ChangeRole(string id, [Bind(Include = "Role")] ChangeRoleViewModel model)
         {
             // Can't change your own role.
             if (id == User.Identity.GetUserId())
@@ -311,7 +311,19 @@ namespace ONnegha_Mefisto_Theatre_Company.Controllers
                 //now we are adding the user to the new role
                 await userManager.AddToRoleAsync(id, model.Role);
 
-                return RedirectToAction("Index", "Admin");
+                // If the new role is Admin, set isPromoted to true
+                if (model.Role == "Admin")
+                {
+                    staff.isPromoted = true;
+                    await userManager.UpdateAsync(staff);
+                }
+                else
+                {
+                    staff.isPromoted = false;
+                    await userManager.UpdateAsync(staff);
+                }
+
+                    return RedirectToAction("Index", "Admin");
             }
             return View(model);
         }

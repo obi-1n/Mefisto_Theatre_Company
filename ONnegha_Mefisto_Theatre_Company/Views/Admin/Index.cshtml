@@ -3,9 +3,19 @@
     ViewBag.Title = "Index";
 }
 
-<h1>Admin Page</h1>
+<h1>Admin Dashboard</h1>
 
-@Html.ActionLink("Create New Staff", "CreateStaff", "Admin", new { @class = "btn btn-success btn-lg" })
-@Html.ActionLink("View All Staff", "ViewAllStaff", "Admin", new { @class = "btn btn-success btn-lg" })
-@Html.ActionLink("View All Users", "ViewAllUsers", "Admin", new { @class = "btn btn-success btn-lg" })
-@Html.ActionLink("View All Posts", "ViewAllPosts", "Admin", new { @class = "btn btn-success btn-lg" })
+<div class="row g-3 mt-4">
+    <div class="col-12 col-sm-6 col-lg-3">
+        @Html.ActionLink("Create New Staff", "CreateStaff", "Admin", null, new { @class = "btn btn-success btn-lg w-100 h-100 d-flex align-items-center justify-content-center" })
+    </div>
+    <div class="col-12 col-sm-6 col-lg-3">
+        @Html.ActionLink("View All Staff", "ViewAllStaff", "Admin", null, new { @class = "btn btn-success btn-lg w-100 h-100 d-flex align-items-center justify-content-center" })
+    </div>
+    <div class="col-12 col-sm-6 col-lg-3">
+        @Html.ActionLink("View All Users", "ViewAllUsers", "Admin", null, new { @class = "btn btn-success btn-lg w-100 h-100 d-flex align-items-center justify-content-center" })
+    </div>
+    <div class="col-12 col-sm-6 col-lg-3">
+        @Html.ActionLink("View All Posts", "ViewAllPosts", "Admin", null, new { @class = "btn btn-success btn-lg w-100 h-100 d-flex align-items-center justify-content-center" })
+    </div>
+</div>

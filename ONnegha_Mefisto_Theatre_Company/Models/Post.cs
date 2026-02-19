@@ -12,7 +12,9 @@ namespace ONnegha_Mefisto_Theatre_Company.Models
     {
         [Key]
         public int PostId { get; set; }
+        [Required]
         public string Title { get; set; }
+        [Required]
         public string Content { get; set; }
 
         [DataType(DataType.DateTime)]

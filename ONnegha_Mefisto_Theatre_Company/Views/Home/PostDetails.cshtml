@@ -29,21 +29,26 @@
                             @foreach (var comment in Model.Comments.Where(c => c.isApproved))
                             {
                                 <li class="list-group-item">
-                                    <strong>@comment.Member.FirstName</strong> (@comment.dateCommented.ToString("dd MMM yyyy")) <br />
-                                    @comment.Content
-                                    <br />
-                                    @*Only admins moderators and the member that created the comment get the option to delete a comment*@
-                                    @if (User.IsInRole("Admin") || User.IsInRole("Moderator") || comment.MemberId == User.Identity.GetUserId())
-                                    {
-                                        <a class="btn btn-secondary mt-3"
-                                           href="@Url.Action("Delete", "Comment", new { id = comment.CommentId })">Delete</a>
-                                    }
-                                    @* Only the member that created the comment have the option to edit it *@
-                                    @if (comment.MemberId == User.Identity.GetUserId())
-                                    {
-                                        <a class="btn btn-secondary mt-3"
-                                           href="@Url.Action("EditComment", "Member", new { id = comment.CommentId })">Edit</a>
-                                    }
+                                    <div class="d-flex justify-content-between align-items-start flex-wrap">
+                                        <div>
+                                            <strong>@comment.Member.FirstName</strong> <span class="text-muted small">(@comment.dateCommented.ToString("dd MMM yyyy"))</span><br />
+                                            <p class="mb-1">@comment.Content</p>
+                                        </div>
+                                        <div class="d-flex gap-2 mt-2 mt-sm-0">
+                                            @*Only admins moderators and the member that created the comment get the option to delete a comment*@
+                                            @if (User.IsInRole("Admin") || User.IsInRole("Moderator") || comment.MemberId == User.Identity.GetUserId())
+                                            {
+                                                <a class="btn btn-sm btn-outline-danger"
+                                                   href="@Url.Action("Delete", "Comment", new { id = comment.CommentId })">Delete</a>
+                                            }
+                                            @* Only the member that created the comment have the option to edit it *@
+                                            @if (comment.MemberId == User.Identity.GetUserId())
+                                            {
+                                                <a class="btn btn-sm btn-outline-primary"
+                                                   href="@Url.Action("EditComment", "Member", new { id = comment.CommentId })">Edit</a>
+                                            }
+                                        </div>
+                                    </div>
                                 </li>
                             }
                         </ul>
@@ -56,7 +61,7 @@
                     @* display suspension message if user is suspended *@
                     @if (User.IsInRole("Suspended"))
                     {
-                        <p>You have been Suspended due to misconduct, and can no leave comments</p>
+                        <p>You have been Suspended due to misconduct, and can not leave comments</p>
                     }
 
                     @* display add comment form if user is a registered member *@
@@ -81,18 +86,20 @@
                     }
 
                     @* All editors and admins can delete a post *@
-                    <a class="btn btn-secondary mt-3" href="@Url.Action("Index", "Home")">Back to Blog</a>
-                    @if (User.IsInRole("Admin") || User.IsInRole("Editor"))
-                    {
-                        <a class="btn btn-secondary mt-3"
-                           href="@Url.Action("DeletePost", "Post", new { id = Model.PostId })">Delete</a>
-                    }
-                    @* Only the editor that made the post has the option to edit it *@
-                    @if (User.IsInRole("Editor") && Model.Staff.Id == User.Identity.GetUserId())
-                    {
-                        <a class="btn btn-secondary mt-3"
-                           href="@Url.Action("Edit", "Editor", new { id = Model.PostId })">Edit</a>
-                    }
+                    <div class="d-flex flex-wrap gap-2 mt-3">
+                        <a class="btn btn-secondary" href="@Url.Action("Index", "Home")">Back to Blog</a>
+                        @if (User.IsInRole("Admin") || User.IsInRole("Editor"))
+                        {
+                            <a class="btn btn-danger"
+                               href="@Url.Action("DeletePost", "Post", new { id = Model.PostId })">Delete</a>
+                        }
+                        @* Only the editor that made the post has the option to edit it *@
+                        @if (User.IsInRole("Editor") && Model.Staff.Id == User.Identity.GetUserId())
+                        {
+                            <a class="btn btn-primary"
+                               href="@Url.Action("Edit", "Editor", new { id = Model.PostId })">Edit</a>
+                        }
+                    </div>
 
 
                 </div>
