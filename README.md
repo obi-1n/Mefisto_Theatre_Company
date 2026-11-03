@@ -1,4 +1,4 @@
-# ONnegha Mefisto Theatre Company
+Mefisto Theatre Company
 
 This repository contains the source code for the ONnegha Mefisto Theatre Company website, built as an ASP.NET MVC application.
 
